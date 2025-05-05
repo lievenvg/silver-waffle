@@ -7,20 +7,29 @@
 	},
 	"item": [
 		{
-			"name": "GET Google",
+			"name": "GET Postman Echo sample API",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://www.google.com/",
+					"raw": "https://postman-echo.com/get?id={{id}}&type={{type}}",
 					"protocol": "https",
 					"host": [
-						"www",
-						"google",
+						"postman-echo",
 						"com"
 					],
 					"path": [
-						""
+						"get"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						},
+						{
+							"key": "type",
+							"value": "{{type}}"
+						}
 					]
 				}
 			},
