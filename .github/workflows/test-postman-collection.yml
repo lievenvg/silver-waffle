@@ -15,5 +15,5 @@ jobs:
       - name: Test local collection
         uses: matt-ball/newman-action@master
         with:
-          collection: ../postman/postman_collection.json
-          environment: ../postman/postman_environment.json
+          collection: ./postman/postman_collection.json
+          environment: ./postman/postman_environment.json
