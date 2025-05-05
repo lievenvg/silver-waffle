@@ -1,0 +1,21 @@
+{
+	"id": "477cdefd-63e1-40cb-a43e-53523bd1ce10",
+	"name": "postman_test_environment",
+	"values": [
+		{
+			"key": "id",
+			"value": "0123210",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "type",
+			"value": "worst_case_scenario",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2025-05-05T09:43:22.032Z",
+	"_postman_exported_using": "Postman/11.43.4"
+}
