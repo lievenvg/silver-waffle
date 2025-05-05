@@ -1,4 +1,4 @@
-name: Newman Run
+name: Test Newman Run
 on:
   workflow_dispatch:
     branches:
