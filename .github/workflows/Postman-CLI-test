@@ -1,0 +1,15 @@
+name: API Tests
+
+on:
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  test-echo-collection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Postman Collection
+        uses: postmanlabs/postman-cli-action@v1
+        with:
+          command: 'collection run postman/postman_test_collection.json --environment postman/postman_test_environment.json'
