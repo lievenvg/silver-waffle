@@ -12,4 +12,4 @@ jobs:
       - name: Run Postman Collection
         uses: postmanlabs/postman-cli-action@v1
         with:
-          command: 'collection run postman/Postman_Echo_Basis_Collection.postman_collection.json --environment postman/Postman_Echo_Basis_Environment.postman_environment.json'
+          command: 'collection run ./postman/Postman_Echo_Basis_Collection.postman_collection.json --environment ./postman/Postman_Echo_Basis_Environment.postman_environment.json'
