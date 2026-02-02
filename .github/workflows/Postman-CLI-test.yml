@@ -6,10 +6,37 @@ on:
       - main
 
 jobs:
-  test-echo-collection:
+  postman-cli:
     runs-on: ubuntu-latest
     steps:
-      - name: Run Postman Collection
-        uses: postmanlabs/postman-cli-action@v1
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Installeer de Postman CLI; we gebruiken hem tegen lokale JSON-bestanden.
+      - name: Install Postman CLI
+        run: |
+          # Postman public install script voor Linux
+          curl -sL https://dl-cli.pstmn.io/install/linux64.sh | sh
+        # Postman CLI + reporters; cloud integraties vereisen Enterprise, lokale runs niet  [2](https://learning.postman.com/docs/integrations/available-integrations/ci-integrations/github-actions/)[3](https://community.postman.com/t/html-report-with-postman-collection-run/64172)
+
+      - name: Run Postman collection with built-in reporters (HTML + JUnit)
+        run: |
+          mkdir -p reports/postman
+          # De CLI ondersteunt reporters zoals html, junit, json, cli
+          postman collection run "postman/Postman_Echo_Basis_Collection.postman_collection.json" \
+            -e "postman/Postman_Echo_Basis_Environment.postman_environment.json" \
+            -r cli,html,junit \
+            --reporter-export "reports/postman"
+        continue-on-error: true
+        # Built-in reporters zijn recent aan Postman CLI toegevoegd  [3](https://community.postman.com/t/html-report-with-postman-collection-run/64172)
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          command: 'collection run ./postman/Postman_Echo_Basis_Collection.postman_collection.json --environment ./postman/Postman_Echo_Basis_Environment.postman_environment.json'
+          name: postman-cli-reports
+          path: reports/postman
+
+      - name: Fail job if tests failed
+        if: failure()
+        run: exit 1
