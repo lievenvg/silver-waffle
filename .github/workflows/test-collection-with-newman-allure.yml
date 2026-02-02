@@ -1,0 +1,58 @@
+name: Test collection with vanilla Newman + Allure
+
+on:
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  newman-allure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Newman + Allure reporter
+        run: |
+          npm i -g newman newman-reporter-allure
+        # Allure reporter voor Newman: https://allurereport.org/docs/newman/  [1](https://allurereport.org/docs/newman/)
+
+      - name: Run Newman (produce Allure results)
+        run: |
+          mkdir -p reports/allure-results
+          newman run "postman/Postman_Echo_Basis_Collection.postman_collection.json" \
+            -e "postman/Postman_Echo_Basis_Environment.postman_environment.json" \
+            --reporters cli,allure \
+            --reporter-allure-resultsDir "reports/allure-results" \
+            --insecure
+        continue-on-error: true
+
+      - name: Install Allure CLI
+        run: |
+          # Download een recente Allure commandline release en installeer
+          VER="2.29.0"
+          curl -sLo allure-${VER}.tgz https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${VER}/allure-commandline-${VER}.tgz
+          tar -xzf allure-${VER}.tgz
+          sudo mv allure-${VER} /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+        # Allure CLI genereert uiteindelijk de HTML uit de results  [1](https://allurereport.org/docs/newman/)
+
+      - name: Generate Allure HTML
+        run: |
+          allure generate reports/allure-results -o reports/allure-report --clean || true
+
+      - name: Upload Allure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: reports/allure-report
+
+      - name: Fail job if tests failed
+        if: failure()
+        run: exit 1
