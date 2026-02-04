@@ -3,6 +3,9 @@ name: Vanilla Waffle Shared - Run Postman Tests
 on:
   workflow_call:
     inputs:
+      environment:
+        required: true
+        type: string
       collection_path:
         required: true
         type: string
